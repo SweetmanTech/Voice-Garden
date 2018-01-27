@@ -13,16 +13,18 @@ const functions = require('firebase-functions');
 
 
 // a. the action name from the Dialogflow intent
-const HUMIDITY_OF_PLANT_INTENT = 'plant_humidity';
-const HUMIDITY_OF_ROOM_INTENT = 'room_humidity';
-const WATER_PLANT_INTENT = 'water_plant'
-const TEMP_OF_ROOM_INTENT = 'room_temp'
-//b. parameters
+const HUMIDITY_OF_PLANT_INTENT = 'plant.humidity';
+const HUMIDITY_OF_ROOM_INTENT = 'room.humidity';
+const WATER_PLANT_INTENT = 'water_plan'
+const TEMP_OF_ROOM_INTENT = 'room.temp'
+const HUMIDITY_OF_PLANT_INTENT_FOLLOWUP = 'plant.humidity_followUp'
 
+const WATER_CONTEXT = 'water-bro'
+//b. parameters
 
 exports.voiceGarden = functions.https.onRequest((request, response) => {
   const app = new App({request, response});
-  const plantHumidityReading; //= get reading from arduino
+  const plantHumidityReading = 75; //= get reading from arduino
   const waterThreshHold = 50;
   console.log('Request headers: ' + JSON.stringify(request.headers));
   console.log('Request body: ' + JSON.stringify(request.body));
@@ -33,9 +35,10 @@ exports.voiceGarden = functions.https.onRequest((request, response) => {
         const waterSoon = 30;
         const waterNow = 20;
         const yourPlantIsProbablyDying = 10;
-        String (homeResponse) = 'The humidity of the soil is ' + humidity + ' percent.';
+        var homeResponse = 'The humidity of the soil is ' + humidity + ' percent.';
         if (plantHumidityReading > waterThreshHold){
             homeResponse += "Your plant's humidity levels are good.";
+            
         }else{
             homeResponse += 'You should probably water your plant ';
             switch(true){
@@ -53,16 +56,20 @@ exports.voiceGarden = functions.https.onRequest((request, response) => {
                     break;
             }
         }
-        app.tell(arduino_response);
+        app.tell(homeResponse);
+        app.setContext(WATER_CONTEXT);
+        app.ask("Do you want to water now?");
+        waterPlant(app);
   }
 
   function roomHumidity(app){
-        let roomHumidity; // = roomHumidity reading
+        let roomHumidity = 50; // = roomHumidity reading
         app.tell("The humidity of the room your plant is in is " + roomHumidity);
   }
 
   function waterPlant(app){
-        String (homeResponse); 
+        
+        var homeResponse;
         if (plantHumidityReading > waterThreshHold){
             homeResponse = "Plant currently doesn't need to be watered";
         }
@@ -79,8 +86,8 @@ exports.voiceGarden = functions.https.onRequest((request, response) => {
         const average = 50;
         const warm = 72;
         const hot = 90;
-        let roomTemp;// = roomTemp reading in farenheit 
-        String (homeResponse) = "The temperature of the room your plant is in is " + roomTemp + '.';
+        let roomTemp = 75;// = roomTemp reading in farenheit 
+        var homeResponse = "The temperature of the room your plant is in is " + roomTemp + '.';
         switch(true){
             case roomTemp >= hot:
                 homeResponse += "I hope it isn't melting!"
@@ -111,5 +118,6 @@ exports.voiceGarden = functions.https.onRequest((request, response) => {
   actionMap.set(HUMIDITY_OF_ROOM_INTENT, roomHumidity);
   actionMap.set(WATER_PLANT_INTENT, waterPlant);
   actionMap.set(TEMP_OF_ROOM_INTENT, roomTemperature);
+  actionMap.set(HUMIDITY_OF_PLANT_INTENT_FOLLOWUP,waterPlant);
   app.handleRequest(actionMap);
 });
