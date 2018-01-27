@@ -15,17 +15,17 @@ void loop(){
   int chk;
   chk = DHT.read(DHT11_PIN);   //Read Data
   switch (chk){
-    case DHTLIB_OK:  
-                Serial.print("OK,\t"); 
+    case DHTLIB_OK:
+                //Serial.print("OK,\t"); 
                 break;
-    case DHTLIB_ERROR_CHECKSUM: 
-                Serial.print("Checksum error,\t"); 
+    case DHTLIB_ERROR_CHECKSUM:
+                Serial.print("Checksum error,\t");
                 break;
-    case DHTLIB_ERROR_TIMEOUT: 
-                Serial.print("Time out error,\t"); 
+    case DHTLIB_ERROR_TIMEOUT:
+                Serial.print("Time out error,\t");
                 break;
-    default: 
-                Serial.print("Unknown error,\t"); 
+    default:
+                Serial.print("Unknown error,\t");
                 break;
   }
   airHumidity=DHT.humidity;
@@ -34,15 +34,12 @@ void loop(){
   airTemperature = airTemperature * 2 + 32;
   
   soilHumidity=analogRead(MOISTURE_PIN);
-  
-  Serial.print("airHumidity:");
+
   Serial.print(airHumidity);
-  Serial.print(",\t");
-  Serial.print("airTemperature:");
+  Serial.print(",");
   Serial.print(airTemperature);
-  Serial.print(",\t");
-  Serial.print("soilHumidity:");
+  Serial.print(",");
   Serial.println(soilHumidity);
-  
+
   delay(1000);
 }
