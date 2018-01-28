@@ -19,7 +19,7 @@ firebase.initializeApp({
 });
 // Get a database reference to our posts
 var db = firebase.database();
-var ref = db.ref("gardens/proof-of-concept-garden");
+var ref = db.ref("gardens/proof-of-concept-garden/live-data");
 
 
 // a. the action name from the Dialogflow intent
@@ -30,19 +30,18 @@ const TEMP_OF_ROOM_INTENT = 'room.temp'
 
 const WATER_CONTEXT = 'water-bro'
 //b. parameters
+var plantHumidityValue =0; //= get reading from arduino
+var roomHumidityValue=0; // = roomHumidity reading
+var roomTempValue=0;// = roomTemp reading in farenheit
 
-ref.on("value", function(snapshot){
+ref.on("value", (snapshot) => {
     plantHumidityValue = snapshot.child("soilHumidity").val();
     roomHumidityValue = snapshot.child("airHumidity").val();
     roomTempValue =  snapshot.child("airTemperature").val();
   });  
 
 exports.voiceGarden = functions.https.onRequest((request, response) => {
-  const app = new App({request, response});
-  var plantHumidityValue; //= get reading from arduino
-  const waterThreshHold = 50;
-  var roomHumidityValue; // = roomHumidity reading
-  var roomTempValue;// = roomTemp reading in farenheit
+  const app = new App({request, response});  const waterThreshHold = 50;
   console.log('Request headers: ' + JSON.stringify(request.headers));
   console.log('Request body: ' + JSON.stringify(request.body));
 
@@ -59,36 +58,35 @@ exports.voiceGarden = functions.https.onRequest((request, response) => {
         }else{
             homeResponse += 'You should probably water your plant ';
             switch(true){
-                case plantHumidityValue <= waterSomeTimeSoon:
+                case plantHumidityValue >= waterSomeTimeSoon:
                     homeResponse += "sometime soon, no rush.";
                     break;
-                case plantHumidityValue <= waterSoon:
+                case plantHumidityValue >= waterSoon:
                     homeResponse += "soon.";
                     break;
-                case plantHumidityValue <= waterNow:
+                case plantHumidityValue >= waterNow:
                     homeResponse += "now.";
                     break;
-                case plantHumidityValue <= yourPlantIsProbablyDying:
+                case plantHumidityValue >= yourPlantIsProbablyDying:
                     homeResponse += "your plant is probably dying, water as soon as possible."
                     break;
             }
             //homeResponse += " Do you want to water now?"
         }
-        
         app.ask(homeResponse + ". Do you want to water?");
   }
 
   function roomHumidity(app){
-        app.tell("The humidity of the room your plant is in is " + roomHumidityValue);
+        app.tell("The humidity of the room your plant is in is " + roomHumidityValue + ' percent.');
   }
 
   function waterPlant(app){
-        var homeResponse;
+        var homeResponse='water plant';
         if (plantHumidityValue > waterThreshHold){
-            homeResponse = "Plant currently doesn't need to be watered";
+            homeResponse += "Plant currently doesn't need to be watered";
         }
         else{
-            homeResponse = 'Plant watered';
+            homeResponse += 'Plant watered';
             //PLANT WATERING EVENT
         }
         app.tell(homeResponse);
