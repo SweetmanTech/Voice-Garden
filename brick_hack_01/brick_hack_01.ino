@@ -9,6 +9,11 @@ int soilHumidity;   //soil moisture
 
 void setup(){
   Serial.begin(9600);
+  pinMode(5, OUTPUT);
+  pinMode(6, OUTPUT);
+
+  digitalWrite(5, LOW);
+  digitalWrite(6, LOW);
 }
 
 void loop(){
@@ -42,4 +47,17 @@ void loop(){
   Serial.println(soilHumidity);
 
   delay(1000);
+}
+
+//open water pump
+void pumpOn() 
+{
+  digitalWrite(5, HIGH);
+  digitalWrite(6, HIGH);
+}
+//close water pump
+void pumpOff() 
+{
+  digitalWrite(5, LOW);
+  digitalWrite(6, LOW);
 }
