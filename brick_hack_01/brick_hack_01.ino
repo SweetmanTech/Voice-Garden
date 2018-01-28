@@ -30,6 +30,9 @@ void loop(){
   }
   airHumidity=DHT.humidity;
   airTemperature=DHT.temperature;
+
+  airTemperature = airTemperature * 2 + 32;
+  
   soilHumidity=analogRead(MOISTURE_PIN);
   
   Serial.print("airHumidity:");
