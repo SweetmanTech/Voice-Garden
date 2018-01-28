@@ -44,9 +44,12 @@ void loop(){
   if(Serial.available()) {
     char inChar = (char)Serial.read();
     if (inChar == 'y') {
-      Serial.print("watering.. soil humidity: " + soilHumidity);
       pumpOn();
-      delay(1000);
+      while(soilHumidity < maxSoilHumidity){
+          Serial.print("watering.. soil humidity: " + soilHumidity);
+          soilHumidity=analogRead(MOISTURE_PIN);
+          delay(1000);
+      }
       pumpOff();
     }
   } else {
