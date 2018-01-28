@@ -1,7 +1,9 @@
 var fs = require('fs');
 var admin = require('firebase-admin');
+const SerialPort = require ("serialport");
 const gardenID = "proof-of-concept-garden";
-const arduinoPort = '/dev/ttyACM3';
+const arduinoPort = '/dev/ttyACM0';
+const port = new SerialPort(arduinoPort);
 
 //Firebase Setup
 var admin = require('firebase-admin');
@@ -18,22 +20,29 @@ var db = admin.database();
 var ref = db.ref("gardens");
 var gardenRef = ref.child(gardenID);
 
-const SerialPort = require ("serialport");
-
-const port = new SerialPort(arduinoPort);
-
 port.on('data', function(data) {
   postData(data);
 })
 
 function postData(data) {
-  let dataArray = data.toString();
+  let dataArray = data.toString('utf8');
   dataArray2 = dataArray.split(",");
-  if (dataArray2.length > 2) {
-    gardenRef.set({
+  if (dataArray2.length > 2 && dataArray2[2].toString()) {
+    gardenRef.child("live-data").set({
       airHumidity: dataArray2[0] ? dataArray2[0] : 0,
       airTemperature: dataArray2[1] ? dataArray2[1] : 0,
-      soilHumidity: dataArray2[2].toString() ? dataArray2[2].toString()  : 0,
+      soilHumidity: dataArray2[2].toString() ? dataArray2[2].toString() : 0,
     });
+  } else {
+    console.log("from EcoDuino: " + data.toString());
   }
 }
+
+//Push water event to EcoDuino
+gardenRef.child("needs-watered").on("value", function(snapshot, prevChildKey) {
+  let needsWatered = snapshot.val();
+  if (needsWatered == "true") {
+    port.write("y");
+  }
+  console.log("Does the garden need watered?... " + needsWatered);
+});
