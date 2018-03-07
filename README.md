@@ -1,4 +1,4 @@
-[![Voice-Garden Logo](https://github.com/qirh/VoiceGarden/blob/master/photo-1920x1920.jpg?raw=true =150x150)](https://github.com/SweetmanTech/brick-hack-voice-garden)
+[![Voice-Garden Logo](https://github.com/SweetmanTech/brick-hack-voice-garden/blob/master/photo-192x192.jpg?raw=true)](https://github.com/SweetmanTech/brick-hack-voice-garden)
 
 
 # Voice Garden [![MIT license](https://img.shields.io/badge/license-MIT-lightgrey.svg)](https://raw.githubusercontent.com/SweetmanTech/brick-hack-voice-garden/master/LICENSE)
@@ -10,6 +10,7 @@ This is a Google Voice application. The application enables the Voice to issue c
 
 
 ## Conversation Flowchart
+![Flow Chart](https://github.com/SweetmanTech/brick-hack-voice-garden/blob/master/flow.png?raw=true)
 
 
 
