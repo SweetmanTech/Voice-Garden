@@ -1,7 +1,7 @@
-[![Voice-Garden Logo](https://github.com/SweetmanTech/brick-hack-voice-garden/blob/master/photo-192x192.jpg?raw=true)](https://github.com/SweetmanTech/brick-hack-voice-garden)
+[![Voice-Garden Logo](https://github.com/SweetmanTech/brick-hack-voice-garden/blob/master/garden-192x192.jpg?raw=true)](https://github.com/SweetmanTech/brick-hack-voice-garden)
 
-<img src="garden-1920x1920.png" height = "450" width="450">
-<img src="/garden-1920x1920.png" height = "450" width="450">
+<img src="pics/garden-1920x1920.png" height = "450" width="450">
+<img src="/pics/garden-1920x1920.png" height = "450" width="450">
 
 
 # Voice Garden [![MIT license](https://img.shields.io/badge/license-MIT-lightgrey.svg)](https://raw.githubusercontent.com/SweetmanTech/brick-hack-voice-garden/master/LICENSE)
